@@ -1,0 +1,29 @@
+* {
+    margin: 0;
+}
+
+.container {
+    width: 600px;
+    border: 1px solid #BEBEBE;
+    border-radius: 8px;
+    padding: 20px 30px;
+    text-align: center;
+}
+
+.container p {
+    margin: 10px 0;
+}
+
+.container a {
+  text-decoration: none;
+  background-color: #886ed7;
+  border-radius: 8px;
+  padding: 10px 20px;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
+}
+
+.container a:hover {
+  background-color: #6c48d7;
+}

@@ -1,0 +1,10 @@
+{
+  "name": "katsiaryna_hachko_nodejs",
+  "script": "./node_modules/nodemon/bin/nodemon.js",
+  "watch": false,
+  "instances": 4,
+  "exec_mode": "fork",
+  "env": {
+    "NODE_ENV": "development"
+  }
+}
