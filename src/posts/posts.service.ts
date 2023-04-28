@@ -9,7 +9,7 @@ export class PostsService {
   constructor(private prisma: PrismaService) {}
 
   async find(): Promise<Post[]> {
-    return this.prisma.post.findMany({
+    return await this.prisma.post.findMany({
       where: {
         isPublish: true
       },
@@ -48,7 +48,7 @@ export class PostsService {
   }
 
   async findById(id: string): Promise<Post> {
-    return this.prisma.post.findUniqueOrThrow({
+    return await this.prisma.post.findUniqueOrThrow({
       where: {id},
       include: {tags: true}
     })
