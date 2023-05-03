@@ -1,30 +1,35 @@
-import { Post } from "@prisma/client"
-import { IsDefined, IsEmpty, IsOptional, IsString, Length } from "class-validator"
+import { Post } from '@prisma/client';
+import {
+  IsDefined,
+  IsEmpty,
+  IsOptional,
+  IsString,
+  Length,
+} from 'class-validator';
 
-export class PostCreateDto implements Omit<Post, "id" | "userId"> {
+export class PostCreateDto implements Omit<Post, 'id' | 'userId'> {
   @IsDefined()
   @IsString()
   @Length(3)
-  title: string
+  title: string;
 
   @IsDefined()
   @IsString()
   @Length(10)
-  text: string
+  text: string;
 
   @IsOptional()
-  tags: { id: string }[]
+  tags: { id: string }[];
 
   @IsEmpty()
-  viewsCount: number
+  viewsCount: number;
 
   @IsEmpty()
-  isPublish: boolean
+  isPublish: boolean;
 
   @IsEmpty()
-  createdAt: Date
+  createdAt: Date;
 
   @IsEmpty()
-  updatedAt: Date
-
+  updatedAt: Date;
 }

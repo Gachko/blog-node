@@ -1,11 +1,11 @@
 import { JwtPayloadType } from './auth/types/jwtPayload.type';
 
-export {}
+export {};
 
 declare global {
   namespace Express {
     interface Request {
-      token: JwtPayloadType
+      token: JwtPayloadType;
     }
   }
 }

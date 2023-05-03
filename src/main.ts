@@ -1,17 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { PrismaService } from './common/prisma/prisma.service';
-import { ValidationPipe } from '@nestjs/common';
-import { parseTokenMiddleware } from './common/middlewares/token.middleware';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true
-  }))
-  app.use(await parseTokenMiddleware)
+  app.use(cookieParser());
   await app.listen(3000);
   const prismaService = app.get(PrismaService);
-  await prismaService.enableShutdownHooks(app)
+  await prismaService.enableShutdownHooks(app);
 }
 bootstrap();

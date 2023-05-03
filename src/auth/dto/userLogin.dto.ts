@@ -1,12 +1,12 @@
-import { User } from "@prisma/client"
-import { IsDefined, IsEmail, IsString } from "class-validator"
+import { User } from '@prisma/client';
+import { IsDefined, IsEmail, IsString } from 'class-validator';
 
-export class UserLoginDto implements Pick<User, "email" | "password"> {
+export class UserLoginDto implements Pick<User, 'email' | 'password'> {
   @IsDefined()
   @IsEmail()
-  email: string
+  email: string;
 
   @IsDefined()
   @IsString()
-  password: string
+  password: string;
 }

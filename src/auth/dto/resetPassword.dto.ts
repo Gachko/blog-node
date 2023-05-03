@@ -1,7 +1,7 @@
-import { IsDefined, IsEmail } from "class-validator"
+import { IsDefined, IsEmail } from 'class-validator';
 
 export class ResetPasswordDto {
   @IsDefined()
   @IsEmail()
-  email: string
+  email: string;
 }

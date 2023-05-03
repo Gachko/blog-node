@@ -1,28 +1,28 @@
-import { User, Status, Role } from "@prisma/client"
-import { IsDefined, IsEmail, IsEmpty, IsString } from "class-validator"
+import { User, Status, Role } from '@prisma/client';
+import { IsDefined, IsEmail, IsEmpty, IsString } from 'class-validator';
 
-export class UserCreateDto implements Omit<User, "id"> {
+export class UserCreateDto implements Omit<User, 'id'> {
   @IsDefined()
   @IsEmail()
-  email: string
+  email: string;
 
   @IsDefined()
   @IsString()
-  password: string
+  password: string;
 
   @IsDefined()
   @IsString()
-  name: string
+  name: string;
 
   @IsEmpty()
-  status: Status
+  status: Status;
 
   @IsEmpty()
-  role: Role
+  role: Role;
 
   @IsEmpty()
-  createdAt: Date
+  createdAt: Date;
 
   @IsEmpty()
-  updatedAt: Date
+  updatedAt: Date;
 }

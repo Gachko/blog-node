@@ -8,6 +8,6 @@ export class PostsController {
 
   @Get()
   getAll(): Promise<Post[]> {
-    return  this.postsService.find()
+    return this.postsService.find();
   }
 }
