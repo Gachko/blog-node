@@ -1,6 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../common/prisma/prisma.service';
-import { Post } from '@prisma/client';
+import { Post, Role, User } from '@prisma/client';
 import { PostCreateDto } from './dto/postCreate.dto';
 import { PostUpdateDto } from './dto/postUpdate.dto';
 
@@ -19,7 +23,11 @@ export class PostsService {
     });
   }
 
-  async update(id: string, post: PostUpdateDto): Promise<Post> {
+  async update(id: string, post: PostUpdateDto, user: User): Promise<Post> {
+    const existedPost = await this.findById(id);
+    if (!existedPost) throw new NotFoundException('Post not found');
+    if (!this.isAccessible(user, id))
+      throw new ForbiddenException('Access denied');
     return await this.prisma.post.update({
       where: { id },
       data: {
@@ -33,12 +41,15 @@ export class PostsService {
     });
   }
 
-  async create(post: PostCreateDto, userId: string): Promise<Post> {
+  async create(post: PostCreateDto, user: User): Promise<Post> {
+    let isPublish = false;
+    if (user.role === Role.ADMIN) isPublish = true;
     return await this.prisma.post.create({
       data: {
         title: post.title,
         text: post.text,
-        userId,
+        userId: user.id,
+        isPublish,
         tags: {
           connect: post.tags,
         },
@@ -48,13 +59,22 @@ export class PostsService {
   }
 
   async findById(id: string): Promise<Post> {
-    return await this.prisma.post.findUniqueOrThrow({
+    const post = await this.prisma.post.findFirst({
       where: { id },
       include: { tags: true },
     });
+    if (!post) throw new NotFoundException('Post not found');
+    return post;
   }
 
-  async delete(id: string): Promise<Post> {
+  async delete(id: string, user: User): Promise<Post> {
+    const post = await this.prisma.post.findFirst({
+      where: { id },
+      include: { tags: true },
+    });
+    if (!post) throw new NotFoundException('Post not found');
+    if (!this.isAccessible(user, id))
+      throw new ForbiddenException('Access denied');
     return await this.prisma.post.delete({ where: { id } });
   }
 
@@ -72,5 +92,22 @@ export class PostsService {
         tags: true,
       },
     });
+  }
+
+  async getUnpublishedPosts(user: User) {
+    const posts = await this.prisma.post.findMany({
+      include: {
+        tags: true,
+      },
+    });
+    if (user.role === Role.ADMIN) return posts;
+    return posts.filter((post) => post.id === user.id);
+  }
+
+  private isAccessible(user: User, postId: string): boolean {
+    return (
+      user?.role === Role.ADMIN ||
+      (user?.role === Role.MANAGER && postId === user?.id)
+    );
   }
 }
