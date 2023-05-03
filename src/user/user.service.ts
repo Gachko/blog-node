@@ -1,5 +1,8 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../common/prisma/prisma.service';
+import { UserUpdateDto } from './dto/userUpdate.dto';
+import { User } from '@prisma/client';
+import UserDTO from './dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -16,5 +19,20 @@ export class UserService {
 
   async getUserByEmail(email: string) {
     return await this.prisma.user.findFirst({ where: { email } });
+  }
+
+  async getUsers() {
+    const users = await this.prisma.user.findMany();
+    return users.map((user: User) => new UserDTO(user));
+  }
+
+  async update(user: UserUpdateDto, id: string) {
+    return await this.prisma.user.update({
+      where: { id },
+      data: {
+        status: user.status,
+        role: user.role,
+      },
+    });
   }
 }
